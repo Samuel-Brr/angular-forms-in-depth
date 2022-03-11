@@ -6,10 +6,12 @@
 
       <mat-form-field>
 
-        <input ngModel #email="ngModel" matInput required type="email" name="email"
+        <input ngModel #email="ngModel" matInput required type="email" name="email" email
                placeholder="Email">
 
       <mat-error *ngIf="email.errors?.required">The email is mandatory.</mat-error>
+
+      <mat-error *ngIf="email.errors?.email">This is not a valid email</mat-error>
 
       </mat-form-field>
 
