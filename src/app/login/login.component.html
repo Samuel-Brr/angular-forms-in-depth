@@ -6,14 +6,14 @@
 
       <mat-form-field>
 
-        <input ngModel matInput type="email" name="email"
+        <input ngModel #email="ngModel" matInput required type="email" name="email"
                placeholder="Email">
 
       </mat-form-field>
 
       <mat-form-field>
 
-        <input ngModel matInput type="password"
+        <input ngModel #password="ngModel" matInput required type="password"
         name="password"
         placeholder="Password">
 
