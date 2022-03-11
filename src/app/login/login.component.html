@@ -6,8 +6,11 @@
 
       <mat-form-field>
 
-        <input ngModel #email="ngModel" matInput required type="email" name="email" email
-               placeholder="Email">
+        <input ngModel #email="ngModel"
+              (ngModelChange)="onEmailChange($event)"
+              [ngModelOptions]="{updateOn: 'blur'}"
+              matInput required type="email" name="email" email
+              placeholder="Email">
 
       <mat-error *ngIf="email.errors?.required">The email is mandatory.</mat-error>
 
