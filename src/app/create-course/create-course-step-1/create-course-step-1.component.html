@@ -12,4 +12,15 @@
 
   </mat-form-field>
 
+  <mat-form-field>
+
+    <input matInput [matDatepicker]="releaseDatePicker" placeholder="Release date" formControlName="releasedAt">
+
+    <mat-datepicker-toggle matSuffix [for]="releaseDatePicker">
+    </mat-datepicker-toggle>
+
+    <mat-datepicker #releaseDatePicker></mat-datepicker>
+
+  </mat-form-field>
+
 </div>
