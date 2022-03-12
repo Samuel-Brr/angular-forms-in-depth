@@ -12,10 +12,16 @@ import {noop, of} from 'rxjs';
 })
 export class FileUploadComponent {
 
+  constructor(private http: HttpClient){
+
+  }
+
   @Input()
   requiredFileType:string
 
   fileName: string = ''
+
+  fileUploadError: boolean = false
 
   onFileSelected(event) {
 
@@ -25,8 +31,21 @@ export class FileUploadComponent {
 
       this.fileName = file.name
 
-      console.log(this.fileName)
-      
+      this.fileUploadError = false
+
+      const formData = new FormData()
+
+      formData.append("thumbnail", file)
+
+      this.http.post("/api/thumbnail-upload", formData)
+        .pipe(
+          catchError(error => {
+            this.fileUploadError = true
+            return of(error)
+          })
+        )
+        .subscribe()
+
     }
 
 
