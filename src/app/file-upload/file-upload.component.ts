@@ -3,6 +3,7 @@ import {HttpClient, HttpEventType} from '@angular/common/http';
 import {catchError, finalize} from 'rxjs/operators';
 import {AbstractControl, ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator} from '@angular/forms';
 import {noop, of} from 'rxjs';
+import { NumberSymbol } from '@angular/common';
 
 
 @Component({
@@ -23,6 +24,8 @@ export class FileUploadComponent {
 
   fileUploadError: boolean = false
 
+  uploadProgress:number;
+
   onFileSelected(event) {
 
     const file:File = event.target.files[0]
@@ -37,14 +40,24 @@ export class FileUploadComponent {
 
       formData.append("thumbnail", file)
 
-      this.http.post("/api/thumbnail-upload", formData)
+      this.http.post("/api/thumbnail-upload", formData, {
+        reportProgress: true,
+        observe: 'events'
+      })
         .pipe(
           catchError(error => {
             this.fileUploadError = true
             return of(error)
+          }),
+          finalize(()=>{
+            this.uploadProgress = null
           })
         )
-        .subscribe()
+        .subscribe(event => {
+          if(event.type == HttpEventType.UploadProgress){
+              this.uploadProgress = Math.round(100*(event.loaded/event.total))
+          }
+        })
 
     }
 
