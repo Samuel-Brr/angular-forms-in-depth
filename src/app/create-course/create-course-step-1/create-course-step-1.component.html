@@ -14,17 +14,17 @@
 
   <mat-form-field>
 
-    <mat-select placeholder="Select category" formControlName="category ">
+    <mat-select placeholder="Select category" formControlName="category">
 
-      <ng-container *ngFor="let category of (courseCategories$ | async)">
+        <ng-container *ngFor="let category of (courseCategories$ | async)">
 
-        <mat-option [value]="category.code" >{{category.description}}</mat-option>
+            <mat-option [value]="category.code">{{category.description}}</mat-option>
 
-      </ng-container>
+        </ng-container>
 
     </mat-select>
 
-  </mat-form-field>
+</mat-form-field>
 
   <mat-form-field>
 
@@ -46,4 +46,10 @@
       <textarea  matInput placeholder="Description" formControlName="longDescription"></textarea>
 
   </mat-form-field>
+</div>
+
+<div class="form-val">
+
+    {{form.value | json}}
+
 </div>
