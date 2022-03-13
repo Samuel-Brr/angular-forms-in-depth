@@ -5,7 +5,6 @@ import {Observable} from 'rxjs';
 import {filter} from 'rxjs/operators';
 import { courseTitleValidator } from '../../validators/course-title.validator';
 
-
 interface CourseCategory {
   code: string;
   description: string;
