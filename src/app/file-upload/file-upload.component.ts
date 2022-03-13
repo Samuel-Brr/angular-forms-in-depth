@@ -26,6 +26,17 @@ export class FileUploadComponent implements ControlValueAccessor {
 
   uploadProgress:number;
 
+  onChange: Function = (fileName: string) => {}
+
+  onTouched: Function = () => {}
+
+  disabled:boolean=false
+
+  onClick(fileUpload: HTMLInputElement){
+    this.onTouched()
+    fileUpload.click()
+  }
+
   onFileSelected(event) {
 
     const file:File = event.target.files[0]
@@ -57,10 +68,29 @@ export class FileUploadComponent implements ControlValueAccessor {
           if(event.type == HttpEventType.UploadProgress){
               this.uploadProgress = Math.round(100*(event.loaded/event.total))
           }
+          else if(event.type == HttpEventType.Response){
+              this.onChange(this.fileName)
+          }
         })
 
     }
 
+
+  }
+
+  writeValue(value: any) {
+    this.fileName = value
+  }
+
+  registerOnChange(onChange: any): void {
+    this.onChange = onChange
+  }
+
+  registerOnTouched(onTouched: any): void {
+    this.onTouched = onTouched
+  }
+
+  setDisabledState(disabled: boolean): void {
 
   }
 
