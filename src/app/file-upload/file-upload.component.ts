@@ -1,7 +1,7 @@
 import {Component, Input} from '@angular/core';
 import {HttpClient, HttpEventType} from '@angular/common/http';
 import {catchError, finalize} from 'rxjs/operators';
-import {AbstractControl, ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator} from '@angular/forms';
+import {AbstractControl, ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR, ValidationErrors, Validator} from '@angular/forms';
 import {noop, of} from 'rxjs';
 import { NumberSymbol } from '@angular/common';
 
@@ -15,10 +15,15 @@ import { NumberSymbol } from '@angular/common';
       provide: NG_VALUE_ACCESSOR,
       multi: true,
       useExisting: FileUploadComponent
+    },
+    {
+      provide: NG_VALIDATORS,
+      multi: true,
+      useExisting: FileUploadComponent
     }
   ]
 })
-export class FileUploadComponent implements ControlValueAccessor {
+export class FileUploadComponent implements ControlValueAccessor, Validator {
 
   constructor(private http: HttpClient){
 
@@ -31,6 +36,8 @@ export class FileUploadComponent implements ControlValueAccessor {
 
   fileUploadError: boolean = false
 
+  fileUploadSuccess: boolean = false
+
   uploadProgress:number;
 
   onChange: Function = (fileName: string) => {}
@@ -38,6 +45,8 @@ export class FileUploadComponent implements ControlValueAccessor {
   onTouched: Function = () => {}
 
   disabled:boolean=false
+
+  onValidatorChange: Function = () => {}
 
   onClick(fileUpload: HTMLInputElement){
     this.onTouched()
@@ -77,6 +86,8 @@ export class FileUploadComponent implements ControlValueAccessor {
           }
           else if(event.type == HttpEventType.Response){
               this.onChange(this.fileName)
+              this.fileUploadSuccess = true
+              this.onValidatorChange()
           }
         })
 
@@ -99,6 +110,26 @@ export class FileUploadComponent implements ControlValueAccessor {
 
   setDisabledState(disabled: boolean): void {
 
+  }
+
+  registerOnValidatorChange(onValidatorChange: () => void): void {
+    this.onValidatorChange = onValidatorChange
+  }
+
+  validate(control: AbstractControl): ValidationErrors | null {
+    if(this.fileUploadSuccess){
+      return null
+    }
+
+    let errors: any = {
+      requiredFileType: this.requiredFileType
+    }
+
+    if(this.fileUploadError){
+      errors.uploadFailed = true
+    }
+
+    return errors
   }
 
 }
